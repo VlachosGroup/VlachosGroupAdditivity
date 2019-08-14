@@ -15,7 +15,7 @@ Objects
 
 .. class:: Dog
 
-   It's a dog
+   It's a cat
 
 .. autoclass:: pgradd.RINGParser.Reader
    :members:

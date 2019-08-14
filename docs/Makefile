@@ -6,7 +6,7 @@
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 SOURCEDIR     = source
-BUILDDIR      = ../../build_pgradd
+BUILDDIR      = ../../pGrAdd_docs
 PDFBUILDDIR   = /tmp
 PDF           = ../manual.pdf
 
@@ -17,7 +17,7 @@ help:
 # Builds in a separate directory to make it easier to manage git branches,
 # namely the gh-pages branch for deployment
 build: FORCE
-	sphinx-build -b html source ../../build_pgradd
+	sphinx-build -b html source ../../pGrAdd_docs
 # FORCE is necessary because Make only runs when a dependency changes;
 # it doesn't always run build even if something has changed
 FORCE: ;
