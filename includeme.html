@@ -1,0 +1,405 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>python Group Additivity (pgradd) &mdash; pgradd 1.0.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="_static/p_icon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Example set of Python Scripts" href="examplepage.html" />
+    <link rel="prev" title="Welcome to pgradd’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pgradd
+          
+
+          
+            
+            <img src="_static/pgradd_logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">python Group Additivity (pgradd)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#developers">Developers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#required-packages">Required Packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#license">License</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contributing">Contributing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#questions">Questions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#special-thanks">Special Thanks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#citations">Citations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examplepage.html">Example set of Python Scripts</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pgradd</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>python Group Additivity (pgradd)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/includeme.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="python-group-additivity-pgradd">
+<h1>python Group Additivity (pgradd)<a class="headerlink" href="#python-group-additivity-pgradd" title="Permalink to this headline">¶</a></h1>
+<p>A Python package and database, developed by the Vlachos Research Group at the University of Delaware implements the <strong>F</strong>irst-<strong>P</strong>rinciples <strong>S</strong>emi-<strong>E</strong>mpirical (FPSE) <strong>G</strong>roup <strong>A</strong>dditivity
+(GA) method for estimating thermodynamic properties of molecules. First introduced by Benson et al. for gas molecules and
+was later extended by Kua et al. to species adsorbed on catalytic surfaces. GA relies on graph theory defining each molecule
+as a collection of groups and their frequency of occurrence. The values of GA groups are determined from DFT-calculated
+thermodynamic properties of a (training) set of molecules by linear regression to minimize the difference of thermodynamic
+properties of molecules predicted by the GA from those estimated via DFT. This package implements four group additivity
+schemes in six databases (See below) and will convert a molecule entered as a <strong>S</strong>implified <strong>M</strong>olecular-<strong>I</strong>nput
+<strong>L</strong>ine-<strong>E</strong>ntry <strong>S</strong>ystem (<a class="reference external" href="https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system">SMILES</a>) providing the constituent groups, their frequency of occurrence, and estimated
+thermodynamic properties for that molecule. pgradd also provides a general GA framework for implementing a custom group additivity
+scheme from your <em>ab initio</em> data and regression to groups.</p>
+<ul class="simple">
+<li><p>Benson’s gas molecule group additivity (BensonGA)</p></li>
+<li><p>Salciccioli et al. (2012) adsorbate on Pt(111) group additivity scheme (SalciccioliGA2012)</p></li>
+<li><p>Gu et al. (2017) solvated adsorbate on Pt(111) group additivity scheme (GuSolventGA2017Aq, GuSolventGA2017Vac)</p></li>
+<li><p>Wittreich (2018) adsorbate on Pt(111). Subset of Gu et al. including only surface species, group values regressed with OLS/GLS (Maximum Likelihood) and DFT data processed with <a class="reference external" href="https://github.com/VlachosGroup/pMuTT">pmutt</a> (GRWSurface2018)</p></li>
+<li><p>Wittreich (2018) solvated adsorbate on Pt(111). Subset of Gu et al. including only surface species, group values regressed with OLS/GLS (Maximum Likelihood) and DFT data processed with <a class="reference external" href="https://github.com/VlachosGroup/pMuTT">pmutt</a> (GRWAqueous2018)</p></li>
+</ul>
+<div class="section" id="developers">
+<h2>Developers<a class="headerlink" href="#developers" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Gerhard R Wittreich, P.E.</p></li>
+<li><p>Geun Ho Gu</p></li>
+<li><p>Michael Salciccioli</p></li>
+<li><p>Stephen M. Edie</p></li>
+</ul>
+</div>
+<div class="section" id="required-packages">
+<h2>Required Packages<a class="headerlink" href="#required-packages" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Python2/Python3</p></li>
+<li><p><a class="reference external" href="https://github.com/VlachosGroup/pMuTT">pmutt</a> &gt;= 1.2.5</p></li>
+<li><p><a class="reference external" href="https://www.rdkit.org/">rdkit</a> &gt;= 2018.03.4.0</p></li>
+<li><p>ipython &gt;= 7.0.0</p></li>
+<li><p><a class="reference external" href="http://www.numpy.org/">numpy</a> &gt;= 1.15.1</p></li>
+<li><p><a class="reference external" href="https://pyyaml.org/">pyyaml</a> &gt;= 3.0</p></li>
+<li><p><a class="reference external" href="https://www.scipy.org/">scipy</a> &gt;= 1.1.0</p></li>
+</ul>
+</div>
+<div class="section" id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p>Install using pip:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">user</span> <span class="n">pgradd</span>
+</pre></div>
+</div>
+</li>
+<li><p>Run the unit tests. Navigate to the <strong>tests</strong> directory, input the command shown below, and look for an <strong>OK</strong> response. (<strong>Note:</strong> The number of tests/time may change with subsequent versions):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">unittest</span>
+
+<span class="o">..................................</span>
+<span class="o">----------------------------------------------------------------------</span>
+<span class="n">Ran</span> <span class="mi">36</span> <span class="n">tests</span> <span class="ow">in</span> <span class="mf">4.389</span><span class="n">s</span>
+
+<span class="n">OK</span>
+</pre></div>
+</div>
+</li>
+<li><p>Look at examples below</p></li>
+</ol>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<p>This project is licensed under the MIT License - see the <a class="reference external" href="https://github.com/VlachosGroup/VlachosGroupAdditivity/blob/master/LICENSE.md">LICENSE</a> file for details.</p>
+</div>
+<div class="section" id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h2>
+<p>If you have a suggestion, please post to our <a class="reference external" href="https://github.com/VlachosGroup/VlachosGroupAdditivity/issues">Issues page</a> with the <code class="docutils literal notranslate"><span class="pre">enhancement</span></code> tag. Similarly, if you encounter a bug, please post to our <a class="reference external" href="https://github.com/VlachosGroup/VlachosGroupAdditivity/issues">Issues page</a> with the <code class="docutils literal notranslate"><span class="pre">bug</span></code> tag. Finally, if you would like to add to the body of code, please check our documentation to make sure the new code is consistent with the relevant page and submit a <a class="reference external" href="https://github.com/VlachosGroup/VlachosGroupAdditivity/pulls">pull request</a>.</p>
+</div>
+<div class="section" id="questions">
+<h2>Questions<a class="headerlink" href="#questions" title="Permalink to this headline">¶</a></h2>
+<p>If you are having issues, please post to our <a class="reference external" href="https://github.com/VlachosGroup/VlachosGroupAdditivity/issues">Issues page</a> with the <code class="docutils literal notranslate"><span class="pre">help</span> <span class="pre">wanted</span></code> or <code class="docutils literal notranslate"><span class="pre">question</span></code> tag. We
+will do our best to assist.</p>
+</div>
+<div class="section" id="special-thanks">
+<h2>Special Thanks<a class="headerlink" href="#special-thanks" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Dr. Jeffrey Frey (pip and conda compatibility)</p></li>
+</ul>
+</div>
+<div class="section" id="citations">
+<h2>Citations<a class="headerlink" href="#citations" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Rangarajan et al. “Language-oriented rule-based reaction network generation and analysis: Algorithms of RING”, Comput. Chem. Eng. 2014, 64, 124</p></li>
+<li><p>Rangarajan et al. “Language-oriented rule-based reaction network generation and analysis: Descrpition of RING”, Comput. Chem. Eng. 2012, 45, 114</p></li>
+<li><p>Benson et al. “Additivity rules for the estimation of thermochemical properties.” Chem. Rev., 1969, 69 (3), 279-324</p></li>
+<li><p>Salciccioli et al. “Density Functional Theory-Derived Group Additivity and Linear Scaling Methods for Prediction of Oxygenate Stability on Metal Catalysts: Adsorption of Open-Ring Alcohol and Polyol Dehydrogenation Intermediates on Pt-Based Metals.” J. Phys. Chem. C, 2010, 114 (47) 20155-20166</p></li>
+<li><p>Kua J, Goddard WA (1998) Chemisorption of Organics on Platinum. 2. Chemisorption of C 2 H x and CH x on Pt(111). J Phys Chem B 102:9492–9500</p></li>
+<li><p>Kua J, Faglioni F, Goddard WA (2000) Thermochemistry for hydrocarbon intermediates chemisorbed on metal surfaces: CH(n-m)(CH3)(m) with n = 1, 2, 3 and m ≤ n on Pt, Ir, Os, Pd, Rh, and Ru. J Am Chem Soc 122:2309–2321</p></li>
+<li><p>Salciccioli et al. “Adsorption of Acid, Ester, and Ether Functional Groups on Pt: Fast Prediction of Thermochemical Properties of Adsorbed Oxygenates via DFT-Based Group Additivity Methods.” J. Phys. Chem. C, 2012, 116(2), 1873-1886</p></li>
+<li><p>Vorotnikov et al. “Group Additivity for Estimating Thermochemical Properties of Furanic Compounds on Pd(111).” Ind. Eng. Chem. Res., 2014, 53 (30), 11929-11938</p></li>
+<li><p>Vorotnikov et al. “Group Additivity and Modified Linear Scaling Relations for Estimating Surface Thermochemistry on Transition Metal Surfaces: Application to Furanics.” J. Phys. Chem. C, 2015, 119 (19), 10417-10426</p></li>
+<li><p>Gu et al. “Group Additivity for Thermochemical Property Estimation of Lignin Monomers on Pt(111).” J. Phys. Chem. C, 2016, 120 (34), 19234-19241</p></li>
+<li><p>Gu GH, Schweitzer B, Michel C, et al (2017) Group additivity for aqueous phase thermochemical properties of alcohols on Pt(111). J Phys Chem C 121:21510–21519</p></li>
+</ul>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p><strong>Benson’s Gas Group Additivity Example</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span><span class="p">:</span>
+<span class="kn">from</span> <span class="nn">pgradd.GroupAdd.Library</span> <span class="k">import</span> <span class="n">GroupLibrary</span>
+<span class="kn">import</span> <span class="nn">pgradd.ThermoChem</span>
+<span class="n">lib</span> <span class="o">=</span> <span class="n">GroupLibrary</span><span class="o">.</span><span class="n">Load</span><span class="p">(</span><span class="s1">&#39;BensonGA&#39;</span><span class="p">)</span>
+<span class="n">descriptors</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">GetDescriptors</span><span class="p">(</span><span class="s1">&#39;C1CO1&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">descriptors</span><span class="p">)</span>
+<span class="n">thermochem</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">Estimate</span><span class="p">(</span><span class="n">descriptors</span><span class="p">,</span><span class="s1">&#39;thermochem&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">thermochem</span><span class="o">.</span><span class="n">get_HoRT</span><span class="p">(</span><span class="mf">298.15</span><span class="p">))</span>
+
+<span class="n">Out</span><span class="p">:</span>
+<span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;C(C)(H)2(O)&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;O(C)2&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Oxirane&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="o">-</span><span class="mf">21.09467743150278</span>
+</pre></div>
+</div>
+<p><strong>Salciccioli et al. J. Phys. Chem. C, 2012, 116 (2), pp 1873-1886 Example</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>In:
+from pgradd.GroupAdd.Library import GroupLibrary
+import pgradd.ThermoChem
+lib = GroupLibrary.Load(&#39;SalciccioliGA2012&#39;)
+descriptors = lib.GetDescriptors(&#39;C([Pt])C[Pt]&#39;)
+print(descriptors)
+thermochem = lib.Estimate(descriptors,&#39;thermochem&#39;)
+print(thermochem.get_HoRT(298.15))
+
+Out:
+defaultdict(&lt;class &#39;int&#39;&gt;, {&#39;C(C)(H)2(Pt)&#39;: 2, &#39;surface-ring strain&#39;: 0.217})
+37.62494617247582
+</pre></div>
+</div>
+<p><strong>Gu et al. J. Phys. Chem. C, 2017, 121 pp 21510–21519 Example</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>In:
+from pgradd.GroupAdd.Library import GroupLibrary
+import pgradd.ThermoChem
+lib = GroupLibrary.Load(&#39;GuSolventGA2017Aq&#39;)
+descriptors = lib.GetDescriptors(&#39;C(=O)([Pt])O&#39;)
+print(descriptors)
+thermochem = lib.Estimate(descriptors,&#39;thermochem&#39;)
+print(thermochem.get_HoRT(500))
+
+Out:
+defaultdict(&lt;class &#39;int&#39;&gt;, {&#39;CO(O)(Pt)+O(CO)(H)&#39;: 1.0})
+-109.86212002776878
+</pre></div>
+</div>
+<p><strong>Wittreich Surface Example</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>In:
+from pgradd.GroupAdd.Library import GroupLibrary
+import pgradd.ThermoChem
+lib = GroupLibrary.Load(&#39;GRWSurface2018&#39;)
+descriptors = lib.GetDescriptors(&#39;[Pt]C([Pt])C([Pt])([Pt])C=O&#39;)
+print(descriptors)
+thermochem = lib.Estimate(descriptors,&#39;thermochem&#39;)
+print(thermochem.get_HoRT(750), &#39;[Dimensionless]&#39;)
+print(thermochem.get_H(750, &#39;kcal/mol&#39;), &#39;[kcal/mol]&#39;)
+
+Out:
+defaultdict(&lt;class &#39;int&#39;&gt;, {&#39;C(C)(H)(Pt)2&#39;: 1, &#39;C(C)(CO)(Pt)2&#39;: 1, &#39;CO(C)(H)&#39;: 1,
+                            &#39;CPt2CPt2&#39;: 1, &#39;CCPt2&#39;: 1, &#39;surface-ring strain&#39;: 0.392})
+-13.423119203382337 [Dimensionless]
+-20.005853103142883 [kcal/mol]
+</pre></div>
+</div>
+<p><strong>Wittreich Solvated Surface Example</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>In:
+from pgradd.GroupAdd.Library import GroupLibrary
+import pgradd.ThermoChem
+lib = GroupLibrary.Load(&#39;GRWAqueous2018&#39;)
+descriptors = lib.GetDescriptors(&#39;C(=O)([Pt])O&#39;)
+print(descriptors)
+thermochem = lib.Estimate(descriptors,&#39;thermochem&#39;)
+print(thermochem.get_HoRT(500), &#39;[Dimensionless]&#39;)
+print(thermochem.get_H(500, &#39;kJ/mol&#39;), &#39;[kJ/mol]&#39;)
+
+Out:
+defaultdict(&lt;class &#39;int&#39;&gt;, {&#39;CO(O)(Pt)+O(CO)(H)&#39;: 1.0})
+-107.57909464133714 [Dimensionless]
+-447.23102885789655 [kJ/mol]
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="examplepage.html" class="btn btn-neutral float-right" title="Example set of Python Scripts" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to pgradd’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Vlachos Research Group
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #000000;
+    }
+  </style>
+
+
+</body>
+</html>
