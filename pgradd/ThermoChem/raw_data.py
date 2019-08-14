@@ -4,11 +4,23 @@ from scipy.integrate import quad as integrate
 from .. import yaml_io
 from .base import ThermochemBase
 from ..Units import eval_qty
+import pmutt.constants as c
 
-# from ..Consts import GAS_CONSTANT as R
-import pmutt as pmutt
-R = pmutt.constants.R(units='J/mol/K')
-# R is now sourced from pmutt.constants instead of Consts
+R = eval_qty(str(c.R(units='J/mol/K')) + ' J/(mol K)')
+
+
+class ConstantSpline(object):
+    # This class emulates the interface to UnivariateSpline in the case of a
+    # single data point (no interpolation).
+    # Used in the ThermochemRawData class.
+    def __init__(self, ND_Cp):
+        self.ND_Cp = ND_Cp
+
+    def __call__(self, Ts):
+        return self.ND_Cp*np.ones_like(Ts)
+
+    def integral(self, T_a, T_b):
+        return self.ND_Cp*(T_b - T_a)
 
 
 class ThermochemRawData(ThermochemBase):
@@ -18,8 +30,7 @@ class ThermochemRawData(ThermochemBase):
     Evaluated quantities are interpolated using a B-spline as discussed in
     :ref:`correlations documentation <correlations>`.
     """
-    def __init__(self, ND_H_ref, ND_S_ref, Ts, ND_Cps,
-                 T_ref=pmutt.constants.T0(units='K'), range=None):
+    def __init__(self, ND_H_ref, ND_S_ref, Ts, ND_Cps, T_ref=c.T0(units='K'), range=None):
         """
         Initialize a thermochemical property correlation from raw data.
 
@@ -43,10 +54,11 @@ class ThermochemRawData(ThermochemBase):
              valid.    If specified, this range must contain T_ref and all data
              points in ND_Cp.
         """
+        #Ts.sort()
         (self.Ts, self.ND_Cps) = list(zip(*sorted(
-            zip(Ts, ND_Cps), key=lambda T_ND_Cps: T_ND_Cps[0])))
-        self.min_T = Ts[0]
-        self.max_T = Ts[-1]
+            zip(Ts, [ND_Cps]), key=lambda T_ND_Cps: T_ND_Cps[0])))
+        self.min_T = min(Ts)
+        self.max_T = max(Ts)
 
         if range is None:
             range = (self.min_T, self.max_T)
@@ -60,10 +72,11 @@ class ThermochemRawData(ThermochemBase):
                 'T_ref=%g is outside the valid correlation range [%g,%g].'
                 % (T_ref, range[0], range[1]))
 
+        #runs assertion checks on range
         ThermochemBase.__init__(self, range)
 
-        self.min_ND_Cp = self.ND_Cps[0]
-        self.max_ND_Cp = self.ND_Cps[-1]
+        self.min_ND_Cp = min(self.ND_Cps)
+        self.max_ND_Cp = max(self.ND_Cps)
 
         self.ND_H_ref = ND_H_ref
         self.ND_S_ref = ND_S_ref
@@ -74,7 +87,7 @@ class ThermochemRawData(ThermochemBase):
             self.spline = ConstantSpline(self.ND_Cps[0])
         else:
             self.spline = InterpolatedUnivariateSpline(
-                self.Ts, self.ND_Cps, k=(3 if N > 3 else N - 1))
+                self.Ts, self.ND_Cps, k=min(3, N-1))
 
     def get_CpoR(self, T):
         """Return non-dimensional standard state heat capacity |eq_ND_Cp_T|."""
@@ -82,26 +95,24 @@ class ThermochemRawData(ThermochemBase):
         if not np.isscalar(T):
             return self._get_CpoR_ar(T)
 
-        if T < self.min_T:
-            return self.min_ND_Cp
-        if T > self.max_T:
-            return self.max_ND_Cp
+        return min(max(T, self.min_ND_Cp), self.max_ND_Cp)
 
+        # is this even necessary anymore? code never accesses that return statement
+        # |
+        # v
         # Work-around for SciPy bug (?):
         # return self.spline(T)
-        return float(self.spline(T))
+        #return float(self.spline(T))
 
     def _get_CpoR_ar(self, T):
-        ND_Cp = np.empty(T.shape)
-        T_below = T < self.min_T
-        T_above = T > self.max_T
-        T_middle = np.logical_not(np.logical_or(T_below, T_above))
-
-        ND_Cp[T_below] = self.min_ND_Cp
-        ND_Cp[T_above] = self.max_ND_Cp
-        ND_Cp[T_middle] = self.spline(T[T_middle])
-
-        return ND_Cp
+        # returns an array of dimension T.shape with all values set to,
+        # for example, self.min_ND_Cp
+        if(T < self.min_T):
+          return np.full(T.shape, self.min_ND_Cp)
+        elif(T > self.max_T):
+          return np.full(T.shape, self.max_ND_Cp)
+        else:
+          return np.full(T.shape, self.spline(T[True]))
 
     def get_SoR(self, T):
         """Return non-dimensional standard state entropy |eq_ND_S_T|."""
@@ -171,9 +182,9 @@ class ThermochemRawData(ThermochemBase):
         if 'T_ref' in params:
             T_ref = params['T_ref']
         else:
-            #T_ref = eval_qty('298.15 K')  #fixed from eval_qty(298.15, 'K')
-            T_ref = pmutt.constants.T0(units='K')
-            #replaced getting room temp (298K) from eval_qty to pmutt.constants
+            #pull room temp from pmutt's constants, append 'K' because eval_qty needs units
+            #T_ref is now of type Quantity, a tuple
+            T_ref = eval_qty(str(c.T0(units=K)) + ' K')
         if 'ND_H_ref' in params:
             ND_H_ref = params['ND_H_ref']
         else:
@@ -266,18 +277,6 @@ yaml_io.register_class('ThermochemRawData',
                        yaml_io.parse(ThermochemRawData._yaml_schema),
                        ThermochemRawData)
 
-
-class ConstantSpline(object):
-    # This class emulates the interface to UnivariateSpline in the case of a
-    # single data point (no interpolation).
-    def __init__(self, ND_Cp):
-        self.ND_Cp = ND_Cp
-
-    def __call__(self, Ts):
-        return self.ND_Cp*np.ones_like(Ts)
-
-    def integral(self, T_a, T_b):
-        return self.ND_Cp*(T_b - T_a)
 
 
 __all__ = ['ThermochemRawData']
